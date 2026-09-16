@@ -64,10 +64,16 @@ export default function DesignIdeas() {
                 <p className="mt-2 max-h-0 overflow-hidden text-sm leading-relaxed text-white/80 opacity-0 transition-all duration-400 group-hover:max-h-32 group-hover:opacity-100">
                   {idea.description}
                 </p>
-                <div className="mt-3 inline-flex items-center gap-1 text-sm font-semibold text-primary-300 opacity-0 transition-all duration-300 group-hover:opacity-100">
+                <a
+                  href={`?idea=${encodeURIComponent(idea.title)}`}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="mt-3 inline-flex items-center gap-1 text-sm font-semibold text-primary-300 opacity-0 transition-all duration-300 group-hover:opacity-100 hover:text-white"
+                  onClick={(event) => event.stopPropagation()}
+                >
                   View Details
                   <ArrowUpRight className="h-4 w-4" />
-                </div>
+                </a>
               </div>
             </div>
           ))}
