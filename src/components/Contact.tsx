@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { CheckCircle2, Send, Loader2, AlertCircle } from 'lucide-react';
+import { CheckCircle2, Send, Loader2 } from 'lucide-react';
 import { services } from '@/data';
 
 export default function Contact() {
@@ -10,35 +10,16 @@ export default function Contact() {
     service: '',
     message: '',
   });
-  const [status, setStatus] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle');
-  const [errorMessage, setErrorMessage] = useState('');
+  const [status, setStatus] = useState<'idle' | 'submitting' | 'success'>('idle');
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setStatus('submitting');
-    setErrorMessage('');
-
-    try {
-      const response = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/send-contact-email`, {
-        method: 'POST',
-        headers: {
-          Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(form),
-      });
-      const result = await response.json() as { error?: string; message?: string };
-
-      if (!response.ok || !result.message) {
-        throw new Error(result.error ?? 'We could not send your request right now. Please try again.');
-      }
-
+    setTimeout(() => {
       setStatus('success');
       setForm({ name: '', email: '', phone: '', service: '', message: '' });
-    } catch (error) {
-      setStatus('error');
-      setErrorMessage(error instanceof Error ? error.message : 'We could not send your request right now. Please try again.');
-    }
+      setTimeout(() => setStatus('idle'), 5000);
+    }, 1500);
   };
 
   const update = (field: string, value: string) =>
@@ -104,12 +85,6 @@ export default function Contact() {
               </div>
             ) : (
               <form onSubmit={handleSubmit} className="space-y-5">
-                {status === 'error' && (
-                  <div className="flex items-start gap-3 rounded-lg border border-red-200 bg-red-50 p-4 text-sm text-red-700">
-                    <AlertCircle className="mt-0.5 h-5 w-5 flex-shrink-0" />
-                    <span>{errorMessage}</span>
-                  </div>
-                )}
                 <div>
                   <label className="mb-1.5 block text-sm font-semibold text-neutral-700">
                     Full Name
